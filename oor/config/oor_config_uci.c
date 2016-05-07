@@ -18,7 +18,7 @@
  */
 
 
-#include "cmdline.h"
+#include "../cmdline.h"
 #include "oor_config_functions.h"
 #include "oor_config_uci.h"
 #include "../oor_external.h"

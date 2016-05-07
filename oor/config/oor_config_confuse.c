@@ -19,7 +19,7 @@
 
 #include <netdb.h>
 #ifdef ANDROID
-#include "../android/jni/confuse_android/src/confuse.h"
+#include "../jni/confuse_android/src/confuse.h" //(Biel) -> This directory is not there on the orignal source
 #else
 #include <confuse.h>
 #endif

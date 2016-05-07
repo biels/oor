@@ -1,11 +1,27 @@
 apply plugin: "com.android.model.application"
 model{
+    repositories {
+        libs(PrebuiltLibraries) {
+            libconfuse {
+                headers.srcDir "native-lib/include/confuse_android/src"
+                binaries.withType(SharedLibraryBinary) {
+                    sharedLibraryFile = file("native-lib/prebuilt/${targetPlatform.getName()}/prebuilt.so")
+                }
+            }
+        }
+    }
     android {
         compileSdkVersion 23
         buildToolsVersion "23.0.2"
         ndk {
             moduleName "oor-native"
-            CFlags.add("-I${file("src/main/jni/native_app_glue")}".toString())
+            CFlags.addAll([
+                   // ["-I${file("src/main/jni/native_app_glue")}".toString(),
+                    "-g",
+                    "-DANDROID",
+                    "-DVPNAPI",
+                    ])
+            ldLibs.addAll(["log"])
         }
         defaultConfig {
             applicationId "biel.openoverlayrouter"
@@ -30,7 +46,13 @@ model{
                 jni {
                     source {
                         srcDir "../../oor"
-                        //exclude "/excludeThisFile.c"
+                        exclude "config/oor_api.c"
+                        exclude "config/oor_api.h"
+                        exclude "config/oor_api_internals.c"
+                        exclude "config/oor_api_internals.h"
+                    }
+                    dependencies{
+                        library "libconfuse" linkage "static"
                     }
                 }
             }
