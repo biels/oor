@@ -12,5 +12,26 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="Press start to run oor"
+        android:editable="true"
+        android:drawableTint="@color/accent_material_light"
+        android:id="@+id/textView"
+        android:password="false"
+        android:layout_above="@+id/button"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start"
+        android:id="@+id/button"
+        android:enabled="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:textStyle="bold"
+        android:textColor="@color/abc_primary_text_material_dark"
+        android:backgroundTint="@color/accent_material_light"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

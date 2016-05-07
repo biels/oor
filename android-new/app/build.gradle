@@ -1,20 +1,39 @@
-apply plugin: 'com.android.application'
-
-android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
-
-    defaultConfig {
-        applicationId "biel.openoverlayrouter"
-        minSdkVersion 19
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+apply plugin: "com.android.model.application"
+model{
+    android {
+        compileSdkVersion 23
+        buildToolsVersion "23.0.2"
+        ndk {
+            moduleName "oor-native"
+            CFlags.add("-I${file("src/main/jni/native_app_glue")}".toString())
+        }
+        defaultConfig {
+            applicationId "biel.openoverlayrouter"
+            minSdkVersion.apiLevel 19
+            targetSdkVersion.apiLevel 23
+            versionCode 1
+            versionName "1.0"
+        }
+        buildTypes {
+            release {
+                minifyEnabled false
+                proguardFiles.add(file("proguard-rules.pro"))
+            }
+        }
+        productFlavors {
+            create("flavor1") {
+                applicationId "com.app"
+            }
+        }
+        sources {
+            main {
+                jni {
+                    source {
+                        srcDir "../../oor"
+                        //exclude "/excludeThisFile.c"
+                    }
+                }
+            }
         }
     }
 }
