@@ -1,67 +1,39 @@
-apply plugin: "com.android.model.application"
-model{
-    repositories {
-        libs(PrebuiltLibraries) {
-            libconfuse {
-                headers.srcDir "native-lib/include/confuse_android/src"
-                binaries.withType(SharedLibraryBinary) {
-                    sharedLibraryFile = file("native-lib/prebuilt/${targetPlatform.getName()}/prebuilt.so")
-                }
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
+    defaultConfig {
+        applicationId "org.oor"
+        minSdkVersion 19
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
             }
         }
     }
-    android {
-        compileSdkVersion 23
-        buildToolsVersion "23.0.2"
-        ndk {
-            moduleName "oor-native"
-            CFlags.addAll([
-                   // ["-I${file("src/main/jni/native_app_glue")}".toString(),
-                    "-g",
-                    "-DANDROID",
-                    "-DVPNAPI",
-                    ])
-            ldLibs.addAll(["log"])
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        defaultConfig {
-            applicationId "biel.openoverlayrouter"
-            minSdkVersion.apiLevel 19
-            targetSdkVersion.apiLevel 23
-            versionCode 1
-            versionName "1.0"
-        }
-        buildTypes {
-            release {
-                minifyEnabled false
-                proguardFiles.add(file("proguard-rules.pro"))
-            }
-        }
-        productFlavors {
-            create("flavor1") {
-                applicationId "com.app"
-            }
-        }
-        sources {
-            main {
-                jni {
-                    source {
-                        srcDir "../../oor"
-                        exclude "config/oor_api.c"
-                        exclude "config/oor_api.h"
-                        exclude "config/oor_api_internals.c"
-                        exclude "config/oor_api_internals.h"
-                    }
-                    dependencies{
-                        library "libconfuse" linkage "static"
-                    }
-                }
-            }
+    }
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
         }
     }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.3.0'
 }
