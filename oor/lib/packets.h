@@ -29,7 +29,7 @@
 #include <netinet/udp.h>
 
 #include "lbuf.h"
-#include "util.h"
+#include "mem_util.h"
 #include "../defs.h"
 #include "../liblisp/lisp_address.h"
 
@@ -38,6 +38,28 @@
 #define MAX_IP_PKT_LEN          4096
 #define MAX_IP_HDR_LEN          40  /* without options or IPv6 hdr extensions */
 #define UDP_HDR_LEN             8
+
+#ifdef BSD
+#define udpsport(x) x->uh_sport
+#define udpdport(x) x->uh_dport
+#define udplen(x) x->uh_ulen
+#define udpsum(x) x->uh_sum
+#else
+#define udpsport(x) x->source
+#define udpdport(x) x->dest
+#define udplen(x) x->len
+#define udpsum(x) x->check
+#endif
+
+#ifdef BSD
+#define tcpsport(x) x->th_sport
+#define tcpdport(x) x->th_dport
+#else
+#define tcpsport(x) x->source
+#define tcpdport(x) x->dest
+#endif
+
+
 
 /* shared between data and control */
 typedef struct packet_tuple {
@@ -48,6 +70,7 @@ typedef struct packet_tuple {
     uint8_t                         protocol;
     uint32_t                        iid;
 } packet_tuple_t;
+
 
 
 /*

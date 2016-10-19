@@ -61,7 +61,6 @@ get_locator_with_afi(mapping_t *m, int afi)
     	}
     }
 
-
     return(NULL);
 }
 
@@ -171,7 +170,7 @@ lsite_entry_update_expiration_timer(lisp_ms_t *ms, lisp_reg_site_t *rsite)
     oor_timer_t *timer;
     glist_t *timer_lst;
 
-    timer_lst = htable_ptrs_timers_get_timers_of_type(ptrs_to_timers_ht,rsite,
+    timer_lst = htable_ptrs_timers_get_timers_of_type_from_obj(ptrs_to_timers_ht,rsite,
             REG_SITE_EXPRY_TIMER);
 
     if (glist_size(timer_lst) != 1){
@@ -608,6 +607,31 @@ ms_recv_msg(oor_ctrl_dev_t *dev, lbuf_t *msg, uconn_t *uc)
      }
 }
 
+
+int
+ms_if_link_update(oor_ctrl_dev_t *dev, char *iface_name, uint8_t state)
+{
+    return (GOOD);
+}
+int
+ms_if_addr_update(oor_ctrl_dev_t *dev, char *iface_name, lisp_addr_t *old_addr,
+        lisp_addr_t *new_addr, uint8_t status)
+{
+    return (GOOD);
+}
+int
+ms_route_update(oor_ctrl_dev_t *dev, int command, char *iface_name ,lisp_addr_t *src_pref,
+        lisp_addr_t *dst_pref, lisp_addr_t *gateway)
+{
+    return (GOOD);
+}
+
+fwd_info_t *
+ms_get_fwd_entry(oor_ctrl_dev_t *dev, packet_tuple_t *tuple)
+{
+    return (NULL);
+}
+
 static oor_ctrl_dev_t *
 ms_ctrl_alloc()
 {
@@ -669,6 +693,8 @@ ctrl_dev_class_t ms_ctrl_class = {
         .destruct = ms_ctrl_destruct,
         .run = ms_ctrl_run,
         .recv_msg = ms_recv_msg,
-        .if_event = NULL,
-        .get_fwd_entry = NULL
+        .if_link_update = ms_if_link_update,
+        .if_addr_update = ms_if_addr_update,
+        .route_update = ms_route_update,
+        .get_fwd_entry = ms_get_fwd_entry
 };
